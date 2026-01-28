@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Ajout d'évènements{% endblock %}
+
+
+{% block header %}
+<header>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container">
+           <a class="navbar-brand" href="/accueil">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a>
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="/accueil">Accueil</a></li>
+                                         
+
+                    <li class="nav-item"><a class="nav-link active" href="/evenements">Evénements</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Plus</a>
+                        <div class="dropdown-menu"><a class="dropdown-item" href="/apropos">A propos</a><a class="dropdown-item" href="/contact">Contact</a></div>
+                    </li>                    
+                </ul>
+                <span class="navbar-text actions">
+                    {% if session.get('role') == 'organisateur' %}
+
+                    <a class="login" href="/accueil">{{session.name }} {{session.surname}}</a>
+                    {% else %}
+                    <a class="login" href="/ticket">{{session.name }} {{session.surname}}</a>
+                    {% endif %}
+                    <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+                    <div id="logout-modal" class="modal">
+                        <div class="modal-content">
+                            <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+                            <button id="confirm-logout" class="confirm btn btn-success" style="background-color: #17a2b8;">Oui</button>
+                            <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+{% block content %}
+<section class="register-photo">
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            <h2 class="text-center"><strong>Ajout de détails de l'évènement</strong></h2>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            <div class="form-group">
+                <input class="form-control" type="text" name="titre" placeholder="Titre" required autofocus="">
+            </div>
+            
+            <div class="form-group">
+                <select name="type_event" class="form-control" required>
+                    <option value="">Sélectionnez un type</option>
+                    <option value="Spectacles et concerts">Spectacles et concerts</option>
+                    <option value="Cabarets">Cabarets</option>
+                    <option value="Dînner concert">Dînner concert</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="text" name="lieu" placeholder="Lieu" required autofocus="">
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="datetime-local" name="date_heure" required autofocus="">
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="hidden" name="organisateur" value="{{ session.id }}">
+                <input class="form-control" type="text" value="{{ session.name }} {{ session.surname }}" readonly>
+            </div>
+            
+            <div class="form-group">
+                <textarea class="form-control" name="description" placeholder="Descriptions...." rows="14" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <input class="form-control" type="text" name="entree" placeholder="Entrée" required>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="text" name="plat_resistance" placeholder="Plat de résistance" required>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="text" name="dessert" placeholder="Dessert" required>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="number" min="5000" max="25000" name="prix_simple" placeholder="Prix billet simple" required>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="number" min="30000" max="45000" name="prix_silver" placeholder="Prix billet silver" required>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="number" min="50000" max="95000" name="prix_gold" placeholder="Prix billet gold" required>
+            </div>
+            
+            <div class="form-group">
+                <input class="form-control" type="number" min="100000" max="200000" name="prix_VIP" placeholder="Prix billet VIP" required>
+            </div>
+            
+
+            <a>Affiche</a>
+            <div class="form-group">
+                <input class="form-control" type="file" name="affiche" accept="image/*" required>
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit">Confirmation de l'ajout</button>
+            </div>
+            
+            <a class="already" href="/accueil">Quitter</a>
+        
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block foot %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 item">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/evenements">Evènements</a></li>
+              
+            </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 item">
+            <h3>A propos</h3>
+            <ul>
+                <li><a href="/apropos">Qui sommes-nous ?</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-3 item social">
+          
+            <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Home page{% endblock %}
+
+{% block header %}
+<header>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container">
+            <a class="navbar-brand" href="/accueil">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a>
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/accueil">Accueil</a></li>  
+
+                    <li class="nav-item"><a class="nav-link" href="/evenements">Evénements</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Plus</a>
+                        <div class="dropdown-menu"><a class="dropdown-item" href="/apropos">A propos</a><a class="dropdown-item" href="/contact">Contact</a></div>
+                    </li>                    
+                </ul>
+                <span class="navbar-text actions">
+                     {% if session.get('role') == 'organisateur' %}
+
+                    <a class="login" href="/accueil">{{session.name }} {{session.surname}}</a>
+                    {% else %}
+                    <a class="login" href="/ticket">{{session.name }} {{session.surname}}</a>
+                    {% endif %}
+                    <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+                    <div id="logout-modal" class="modal">
+                        <div class="modal-content">
+                            <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+                            <button id="confirm-logout" class="confirm btn btn-success" style="background-color: #17a2b8;">Oui</button>
+                            <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<section>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}    
+    
+   
+
+    <div class="header-banner_index">
+        <div class="column_index1">
+            
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <div class="picture">
+                      <img src="{{ url_for('static', filename='images/aff1.jpg') }}" alt="Image 1">
+                    </div>
+                  </div>
+                  <div class="swiper-slide">
+                    <div class="picture">
+                      <img src="{{ url_for('static', filename='images/aff2.jpg') }}" alt="Image 2">
+                    </div>
+                  </div>
+                  <div class="swiper-slide">
+                    <div class="picture">
+                      <img src="{{ url_for('static', filename='images/aff3.jfif') }}" alt="Image 3">
+                    </div>
+                  </div>
+                  <div class="swiper-slide">
+                    <div class="picture">
+                      <img src="{{ url_for('static', filename='images/aff4.jfif') }}" alt="Image 4">
+                    </div>
+                  </div>
+                  <div class="swiper-slide">
+                    <div class="picture">
+                      <img src="{{ url_for('static', filename='images/aff5.jfif') }}" alt="Image 5">
+                    </div>
+                  </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <div class="column_index2">
+                    
+                <h1 id="typing-text" style="color: white; font-size: 60px;">
+                    <strong></strong>
+                </h1>
+                <script>
+                    const text = "RI'vent: \"Moins d'attente, plus d'émotions, en un clic!\"";
+                    const target = document.querySelector("#typing-text strong");
+                    let i = 0;
+                    function typeWriter() {
+                        if (i < text.length) {
+                            target.innerHTML += text.charAt(i);
+                            i++;
+                            setTimeout(typeWriter, 50);
+                        }
+                    }
+                    typeWriter();
+                </script>
+
+        </div>
+
+
+    </div>
+
+      
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  
+    <script>
+        var swiper = new Swiper(".swiper-container", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            initialSlide: 2,
+            loop: true,
+            coverflowEffect: {
+            rotate: 30,
+            stretch: 0,
+            depth: 500,
+            modifier: 1,
+            slideShadows: true,
+            },
+            pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+            },
+            navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+            }
+        });
+    </script>
+  
+</section>
+
+<section>
+    <div class="about-page" >
+        <div class="row">
+            <div class="col-md-6">
+                <h1><strong>Qui sommes-Nous ?</strong> </h1>
+                <p><strong ><span style="color: #17a2b8;">RI</span>'vent</strong> est née d'une vision simple : rendre la billetterie en ligne accessible à tous les organisateurs d'événements à Madagascar. Notre plateforme offre une solution complète et intuitive pour la gestion et la vente de billets en ligne.</p>
+                <p>Nous nous engageons à fournir une expérience utilisateur exceptionnelle, tant pour les organisateurs que pour les participants aux événements.</p>
+            </div>
+            <div class="col-md-6">
+                <img src="{{url_for('static', filename='images/rivent.png') }}" alt="about image" style="width: 100%; height: 300px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="calendar" style="padding: 40px">
+    <div style="text-align: center;">
+        <h1 style="font-size: 20px;font-weight: 700; margin-bottom: 40px;">Evénements disponibles :</h1>
+      {% for item in items %}
+    <a href="{{ url_for('details', item_id=item.id) }}" style="text-decoration: none; color: inherit;">
+        <div class="snip1527">
+            <div class="image">
+                <img src="{{ url_for('static', filename='uploads/' ~ item.affiche) }}" alt="pr-sample23" />
+            </div>
+            <figcaption>
+                <div class="date">
+                    {% if item.date_heure %}
+                        <span class="day">{{ item.date_heure.strftime('%d') }}</span>
+                        <span class="month">{{ item.date_heure.strftime('%b') }}</span>
+                    {% else %}
+                        <span class="day">12</span>
+                        <span class="month">Feb</span>
+                    {% endif %}
+                </div>
+                <h4>{{ item.titre }}</h4>
+            </figcaption>
+        </div>
+    </a>
+{% endfor %}
+
+        
+        
+    </div>
+</section>
+
+{% endblock %}
+
+{% block foot %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 item">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/evenements">Evènements</a></li>
+              
+            </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 item">
+            <h3>A propos</h3>
+            <ul>
+                <li><a href="/apropos">Qui sommes-nous ?</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-3 item social">
+           
+            <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

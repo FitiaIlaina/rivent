@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Inscription Organisateur{% endblock %}
+
+
+{% block header %}
+
+<header>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container"> <a class="navbar-brand" href="/organisateur">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a>
+            <button data-toggle="collapse"
+                class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mr-auto">
+
+                </ul>
+                <span class="navbar-text actions">
+                    <a class="login" href="/">Se connecter</a>
+                    <a class="btn btn-light action-button active" role="button" href="/organisateur">S'inscrire</a>
+                </span>
+            </div>
+        </div>
+    </nav>
+</header>{% endblock %}
+{% block content %}
+<section class="register-photo">
+    <div class="form-container">
+        <form action="{{ url_for('organisateur') }}" method="post">
+            {% if message is defined and message %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+            <h2 class="text-center"><strong>Inscrivez-vous</strong>&nbsp;en tant qu'organisateur</h2>
+            <div class="form-group"><input class="form-control" type="text" name="name" placeholder="Nom" required></div>
+            <div class="form-group"><input class="form-control" type="text" name="surname" placeholder="Prénom(s)" required></div>
+            <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email" required></div>
+            <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Mot de passe" required></div>
+            <div class="form-group"><input class="form-control" type="password" name="confirm_password" placeholder="Confirmer votre mot de passe" required></div>
+            <div class="form-group"><input class="form-control" type="text" name="tel" placeholder="Tel" pattern="\d{10}" maxlength="10" min="0"></div>
+            <div class="form-group">
+                <div class="form-check"><label class="form-check-label"><input class="form-check-input" id="organizer" name="organizer" type="checkbox">Devenir créateur d'évènements</label></div>
+            </div>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--info);">Inscription</button></div>
+            <a class="already" href="/">Vous avez déjà un compte ? Cliquez ici.</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

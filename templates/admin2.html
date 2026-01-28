@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block header %}
+<header>
+  <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+    <div class="container">
+      <a class="navbar-brand" href="#">RI'vent Admin Dashboard</a>
+      <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navcol-1">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <span class="navbar-text actions">
+          <a class="login" href="">
+            {{ session.name }} {{ session.surname }}
+          </a>
+          <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+          <div id="logout-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+              <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+              <button id="confirm-logout" class="confirm btn btn-success" style="background-color: #17a2b8;">Oui</button>
+              <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </nav>
+</header>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var logoutBtn = document.getElementById('logout-btn');
+  var logoutModal = document.getElementById('logout-modal');
+  var confirmLogout = document.getElementById('confirm-logout');
+  var cancelLogout = document.getElementById('cancel-logout');
+  if (logoutBtn) {
+    logoutBtn.onclick = function(e) {
+      e.preventDefault();
+      logoutModal.style.display = 'block';
+    };
+  }
+  if (cancelLogout) {
+    cancelLogout.onclick = function() {
+      logoutModal.style.display = 'none';
+    };
+  }
+  if (confirmLogout) {
+    confirmLogout.onclick = function() {
+      window.location.href = "/deconnexion";
+    };
+  }
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="padding: 30px;">
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-people"></i> Utilisateurs</h5>
+         
+          <a href="/admin/liste_utilisateur" class="btn btn-light btn-sm">Voir la liste</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info mb-3">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-person-badge"></i> Organisateurs</h5>
+          <a href="/admin/organisateur" class="btn btn-light btn-sm">Voir la liste</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-calendar-check"></i> Réservations</h5>
+          <a href="/admin/reservations" class="btn btn-light btn-sm">Voir la liste</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card text-white bg-warning mb-3">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-envelope"></i> Messages</h5>  
+          <a href="/admin/message" class="btn btn-light btn-sm">Voir la boîte</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-success">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+          <i class="bi bi-people"></i> Listes des organisateurs
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for user in users[:30] %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{ user.name }} {{ user.surname }}</span>
+            <a href="/admin/organisateur/{{ user.id }}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-eye-fill"></i> Voir
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      {% if selected_user %}
+      <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+          <i class="bi bi-person-circle"></i> Détails de l'organisateur
+        </div>
+        <div class="card-body">
+          <p><strong>ID :</strong> {{ selected_user.id }}</p>
+          <p><strong>Nom :</strong> {{ selected_user.name }}</p>
+          <p><strong>Prénom :</strong> {{ selected_user.surname }}</p>
+          <p><strong>Email :</strong> {{ selected_user.email }}</p>
+          <div class="actions mt-3">
+            <a href="/admin/organisateur/{{ selected_user.id }}/modify" class="btn btn-primary">Modifier</a>
+            <form action="/admin/organisateur/{{ selected_user.id }}/delete" method="POST" style="display:inline;">
+              <button type="submit" class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?');">Supprimer</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

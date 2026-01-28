@@ -1,0 +1,227 @@
+{% extends "base.html"%} {% block title %}Evénement sélectionné{% endblock %} 
+{% block header %}
+<header>
+  <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+    <div class="container">
+       <a class="navbar-brand" href="/accueil">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a>
+
+      <button
+        data-toggle="collapse"
+        class="navbar-toggler"
+        data-target="#navcol-1"
+      >
+        <span class="sr-only">Toggle navigation</span>
+
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navcol-1">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/accueil">Accueil</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/evenements">Evénements</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a
+              class="dropdown-toggle nav-link"
+              aria-expanded="false"
+              data-toggle="dropdown"
+              href="#"
+              >Plus
+            </a>
+
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/apropos">A propos</a>
+
+              <a class="dropdown-item active" href="/contact">Contact</a>
+            </div>
+          </li>
+        </ul>
+
+        <span class="navbar-text actions">
+         {% if session.get('role') == 'organisateur' %}
+
+          <a class="login" href="/accueil">{{session.name }} {{session.surname}}</a>
+          {% else %}
+           <a class="login" href="/ticket">{{session.name }} {{session.surname}}</a>
+          {% endif %}
+         
+
+          <a
+            class="btn btn-light action-button"
+            role="button"
+            id="logout-btn"
+            href="#"
+            >Se déconnecter</a
+          >
+          <div id="logout-modal" class="modal">
+            <div class="modal-content">
+              <p style="color: black">
+                Voulez-vous vraiment vous déconnecter ?
+              </p>
+              <button
+                id="confirm-logout"
+                class="confirm btn btn-success"
+                style="background-color: #17a2b8"
+              >
+                Oui
+              </button>
+              <button
+                id="cancel-logout"
+                class="cancel btn btn-danger"
+                style="background-color: #333"
+              >
+                Non
+              </button>
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endblock %} 
+{% block content %}
+
+<main class="page-content">
+  <div class="contact-container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-success">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <h1>Contactez-nous</h1>
+
+    <div class="contact-info">
+      <div class="contact-item">
+        <i class="bi bi-geo-alt-fill"></i>
+
+        <div>
+          <h3>Notre adresse</h3>
+
+          <p>Antsirabe 110, Madagascar</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="bi bi-telephone-fill"></i>
+
+        <div>
+          <h3>Téléphone</h3>
+
+          <p>+261 38 85 738 12</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="bi bi-envelope-fill"></i>
+
+        <div>
+          <h3>Email</h3>
+
+          <p>contact@ri'vent.io</p>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" action="/contact" method="POST">
+      <div class="form-group">
+        <label for="full_name">Nom complet</label>
+        <input
+          style="
+            width: 100%;
+            padding: 10px;            
+            border: none;
+            font-size: 16px;
+          "
+          type="text"
+          id="full_name"
+          name="full_name"
+          value = "{{ session.name }} {{ session.surname }}"
+          readonly
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          style="
+            width: 100%;
+            padding: 10px;            
+            border: none;
+            font-size: 16px;
+          "
+          type="email"
+          id="email"
+          name="email"
+          value = "{{ session.email }}"
+          readonly
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Sujet</label>
+        <input
+          style="
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+          "
+          type="text"
+          id="subject"
+          name="subject"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Envoyer le message</button>
+    </form>
+  </div>
+</main>
+
+{% endblock %} 
+
+{% block foot %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 item">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/evenements">Evènements</a></li>
+               
+            </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 item">
+            <h3>A propos</h3>
+            <ul>
+                <li><a href="/apropos">Qui sommes-nous ?</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-3 item social">
+           
+            <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

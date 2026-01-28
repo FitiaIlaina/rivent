@@ -1,0 +1,143 @@
+{% extends "base.html"%}
+
+{% block title %}Evénements{% endblock %}
+
+{% block header %}
+<header>
+  <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+      <div class="container"> <a class="navbar-brand" href="/accueil">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navcol-1">
+              <ul class="navbar-nav mr-auto">
+                  <li class="nav-item"><a class="nav-link" href="/accueil">Accueil</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="/evenements">Evénements</a></li>
+                  <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Plus </a>
+                      <div class="dropdown-menu"><a class="dropdown-item" href="/apropos">A propos</a><a class="dropdown-item" href="/contact">Contact</a></div>
+                  </li>
+              </ul>
+              <span class="navbar-text actions">
+                 {% if session.get('role') == 'organisateur' %}
+
+                   <a class="login" href="/accueil">{{session.name }} {{session.surname}}</a>
+                  {% else %}
+                    <a class="login" href="/ticket">{{session.name }} {{session.surname}}</a>
+                  {% endif %}
+                
+                <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+                <div id="logout-modal" class="modal">
+                    <div class="modal-content">
+                        <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+                        <button id="confirm-logout" class="confirm btn btn-success" style="background-color: #17a2b8;">Oui</button>
+                        <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+                    </div>
+                </div>
+            </span>
+              </span>
+          </div>
+      </div>
+  </nav>
+</header>{% endblock %}
+{% block content %}
+<div class="header-banner">
+  <h2 style="color: white; font-size: 36px;"><strong>RI'vent Evènements</strong></h2>
+</div>
+
+<div class="search-bar mb-3">
+  <form method="GET" action="{{ url_for('events') }}">
+    <input type="text" name="q" placeholder="Rechercher un événement..." value="{{ request.args.get('q', '') }}">
+    <button style="background-color: #17a2b8;" type="submit">Rechercher</button>
+  </form>
+</div>
+{% if session.get('role') == 'organisateur' %}
+<div class="d-flex justify-content-center mb-3">
+  <a href="{{ url_for('ajout') }}" class="btn btn-primary ajouter-evenement-btn" style="background-color: #17a2b8; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; transition: background 0.2s;">
+    <i class="bi bi-plus-lg"></i> Ajouter un événement
+  </a>
+</div>
+{% endif %}
+
+
+{% if items %}
+  
+{% else %}
+  {% set no_results_message = "Aucun événement trouvé." %}
+{% endif %}
+
+{% if no_results_message %}
+  <div class="alert alert-warning">{{ no_results_message }}</div>
+{% endif %}
+
+<div class="event-list">
+  <ul>
+   {% for item in items %}
+  <li style="display: flex; align-items: center; width: 100%; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+    <a href="{{ url_for('details', item_id=item.id) }}" style="display: flex; text-decoration: none; color: inherit; align-items: center; flex-grow: 1;">
+      
+      <div class="event-image">
+        <img src="{{ url_for('static', filename='uploads/' ~ item.affiche) }}" alt="Event Image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+      </div>
+      
+      <div class="event-details" style="flex-grow: 1; margin-left: 15px;">
+        <h3 style="display: inline-block; vertical-align: top; margin-top: 0;">{{ item.titre }}</h3>
+        <p><strong>Heure : </strong> 
+          {% if item.date_heure %}
+            {{ item.date_heure.strftime('%d/%m/%Y %H:%M') }}
+          {% else %}
+            Date non définie
+          {% endif %}
+        </p>
+        <p><strong>Lieu : </strong> {{ item.lieu }}</p>
+      </div>
+
+      <div class="event-date" style="margin-right: 20px; text-align: center;">
+        <span class="day">
+          {% if item.date_heure %}
+            {{ item.date_heure.strftime('%d') }}
+          {% else %}
+            ??
+          {% endif %}
+        </span>
+        <br/>
+        <span class="month">
+          {% if item.date_heure %}
+            {{ item.date_heure.strftime('%b')|capitalize }}
+          {% else %}
+            ??
+          {% endif %}
+        </span>
+      </div>
+
+    </a>
+  </li>
+{% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+
+{% block foot %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 item">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/evenements">Evènements</a></li>
+                
+            </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 item">
+            <h3>A propos</h3>
+            <ul>
+                <li><a href="/apropos">Qui sommes-nous ?</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-3 item social">
+            
+            <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

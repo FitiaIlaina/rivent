@@ -1,0 +1,221 @@
+{% extends "base.html"%}
+
+{% block title %}Evénement sélectionné{% endblock %}
+
+{% block header %}
+<header>
+
+  <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+
+    <div class="container"> <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+      </a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle
+          navigation</span><span class="navbar-toggler-icon"></span></button>
+
+      <div class="collapse navbar-collapse" id="navcol-1">
+
+        <ul class="navbar-nav mr-auto">
+
+          <li class="nav-item"><a class="nav-link" href="/accueil">Accueil</a></li>
+
+          <li class="nav-item"><a class="nav-link" href="/evenements">Evénements</a></li>
+
+          <li class="nav-item dropdown">
+
+            <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Plus </a>
+
+            <div class="dropdown-menu">
+
+              <a class="dropdown-item active" href="/apropos">A propos</a>
+
+              <a class="dropdown-item" href="/contact">Contact</a>
+
+            </div>
+
+          </li>
+
+        </ul>
+        <span class="navbar-text actions">
+          {% if session.get('role') == 'organisateur' %}
+
+            <a class="login" href="/accueil">{{session.name }} {{session.surname}}</a>
+          {% else %}
+            <a class="login" href="/ticket">{{session.name }} {{session.surname}}</a>
+          {% endif %}
+
+          <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+          <div id="logout-modal" class="modal">
+            <div class="modal-content">
+              <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+              <button id="confirm-logout" class="confirm btn btn-success"
+                style="background-color: #17a2b8;">Oui</button>
+              <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+            </div>
+          </div>
+        </span>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+</header>{% endblock %}
+
+{% block content %}
+
+
+<main class="page-content">
+
+  <div class="about-container">
+
+    <section class="about-hero">
+
+      <h1>À propos de RI'vent</h1>
+
+      <p class="subtitle">La billetterie en ligne qui simplifie vos événements</p>
+
+    </section>
+
+    <section class="about-section">
+
+      <h2>Notre Mission</h2>
+
+      <div class="mission-content">
+
+        <p>RI'vent est née d'une vision simple : rendre la billetterie en ligne accessible à tous les organisateurs
+          d'événements à Madagascar. Notre plateforme offre une solution complète et intuitive pour la gestion et la
+          vente de billets en ligne.</p>
+
+        <p>Nous nous engageons à fournir une expérience utilisateur exceptionnelle, tant pour les organisateurs que pour
+          les participants aux événements.</p>
+
+      </div>
+
+    </section>
+
+    <section class="about-section features-section">
+
+      <h2>Nos Services</h2>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+
+          <i class="bi bi-ticket-perforated"></i>
+
+          <h3>Billetterie en Ligne</h3>
+
+          <p>Système de billetterie simple et sécurisé pour tous types d'événements</p>
+
+        </div>
+
+        <div class="feature-card">
+
+          <i class="bi bi-graph-up"></i>
+
+          <h3>Analyse en Temps Réel</h3>
+
+          <p>Suivez vos ventes et gérez vos événements efficacement</p>
+
+        </div>
+
+        <div class="feature-card">
+
+          <i class="bi bi-shield-check"></i>
+
+          <h3>Paiement Sécurisé</h3>
+
+          <p>Transactions sécurisées et multiples options de paiement</p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="about-section stats-section">
+
+      <h2>RI'vent en Chiffres</h2>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <span class="stat-number">1000+</span>
+
+          <span class="stat-label">Événements</span>
+
+        </div>
+
+        <div class="stat-card">
+
+          <span class="stat-number">50K+</span>
+
+          <span class="stat-label">Billets Vendus</span>
+
+        </div>
+
+        <div class="stat-card">
+
+          <span class="stat-number">100+</span>
+
+          <span class="stat-label">Organisateurs</span>
+
+        </div>
+
+        <div class="stat-card">
+
+          <span class="stat-number">98%</span>
+
+          <span class="stat-label">Satisfaction Client</span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="about-section team-section">
+
+      <h2>Notre Équipe</h2>
+
+      <p>Une équipe passionnée dédiée à votre réussite. Nous sommes là pour vous accompagner à chaque étape de votre
+        projet événementiel.</p>
+
+      <a href="/contact" class="contact-btn">Contactez-nous</a>
+
+    </section>
+
+  </div>
+
+</main>
+
+{% endblock %}
+
+
+{% block foot %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-sm-4 col-md-3 item">
+      <h3>Services</h3>
+      <ul>
+        <li><a href="/accueil">Accueil</a></li>
+        <li><a href="/evenements">Evènements</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-sm-4 col-md-3 item">
+      <h3>A propos</h3>
+      <ul>
+        <li><a href="/apropos">Qui sommes-nous ?</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="col-lg-3 item social">
+
+      <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

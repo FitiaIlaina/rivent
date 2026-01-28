@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}404 Not Found{% endblock %}
+
+{% block header %}
+    
+{% endblock %}
+
+{% block content %}
+    <section class="not-found">
+        <h1 style="margin-left: 40%; width: 50%; color: black;">
+            404 Not Found
+        </h1>
+
+        <div style="margin-left: 30%; width: 50%;">
+            <img src="{{ url_for('static', filename='images/404_not_found.png') }}" alt="pr-sample23" />
+        </div>
+    </section>
+{% endblock %}

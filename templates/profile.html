@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Home page{% endblock %}
+
+{% block header %}
+<header>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container">
+            <a class="navbar-brand" href="/accueil">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a>
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link " href="/accueil">Accueil</a></li>   
+                    
+
+                    <li class="nav-item"><a class="nav-link" href="/evenements">Evénements</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Plus</a>
+                        <div class="dropdown-menu"><a class="dropdown-item" href="/apropos">A propos</a><a class="dropdown-item" href="/contact">Contact</a></div>
+                    </li>                    
+                </ul>
+                <span class="navbar-text actions">
+                    <a class="login active" href="{{ url_for('ticket', id=session.id) }}">
+                        {{ session.name }} {{ session.surname }}
+                    </a>
+                    <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+                    <div id="logout-modal" class="modal">
+                        <div class="modal-content">
+                            <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+                            <button id="confirm-logout" class="confirm btn btn-success" style="background-color: #17a2b8;">Oui</button>
+                            <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+{% block content %}
+<style>
+    .qr-container {
+        text-align: center;
+        margin-top: 40px;
+    }
+    .qr-container h2 {
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .qr-container p {
+        color: #555;
+        margin-bottom: 20px;
+    }
+    #qrImage {
+        border: 4px solid #007bff;
+        border-radius: 12px;
+        padding: 10px;
+        background: #fff;
+        margin-bottom: 20px;
+        max-width: 250px;
+        width: 100%;
+        height: auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    #downloadBtn {
+        margin-top: 10px;
+        font-size: 1.1em;
+        padding: 10px 24px;
+    }
+</style>
+<div class="qr-container">
+{% if qr_code %}
+    <h2>
+        <i class="bi bi-qr-code" style="font-size: 2rem; color: #007bff; vertical-align: middle;"></i>
+        Scannez pour voir votre ticket
+    </h2>
+    <img id="qrImage" src="data:image/png;base64,{{ qr_code }}" alt="Ticket QR code" />
+    <br>
+    <a id="downloadBtn" href="data:image/png;base64,{{ qr_code }}" download="ticket_qr.png" class="btn btn-primary">Télécharger votre ticket</a>
+    <p style="margin-top:20px; color:#007bff; font-weight:bold;">
+        Veuillez présenter le ticket lors de l'événement.
+    </p>
+{% else %}
+    <p>Aucun ticket à afficher.</p>
+{% endif %}
+</div>
+{% endblock %}
+
+
+{% block foot %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 item">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/evenements">Evènements</a></li>
+               
+            </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 item">
+            <h3>A propos</h3>
+            <ul>
+                <li><a href="/apropos">Qui sommes-nous ?</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-3 item social">
+           
+            <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

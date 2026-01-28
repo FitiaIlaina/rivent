@@ -1,0 +1,221 @@
+{% extends "base.html"%}
+
+{% block title %}Evénement sélectionné{% endblock %}
+
+{% block header %}
+<header>
+  <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+    <div class="container">
+       <a class="navbar-brand" href="accueil">
+                <img src="{{ url_for('static', filename='images/rivent1.png') }}" alt="RI'Vent Logo" style="height:40px;">
+            </a>
+      <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navcol-1">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="/accueil">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="/evenements">Evénements</a></li>
+          <li class="nav-item dropdown">
+            <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Plus</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/apropos">A propos</a>
+              <a class="dropdown-item" href="/contact">Contact</a>
+            </div>
+          </li>
+        </ul>
+        <span class="navbar-text actions">
+           {% if session.get('role') == 'organisateur' %}
+
+          <a class="login" href="/accueil">{{session.name }} {{session.surname}}</a>
+          {% else %}
+           <a class="login" href="/ticket">{{session.name }} {{session.surname}}</a>
+          {% endif %}
+          <a class="btn btn-light action-button" role="button" id="logout-btn" href="#">Se déconnecter</a>
+          <div id="logout-modal" class="modal">
+            <div class="modal-content">
+              <p style="color:black;">Voulez-vous vraiment vous déconnecter ?</p>
+              <button id="confirm-logout" class="confirm btn btn-success" style="background-color: #17a2b8;">Oui</button>
+              <button id="cancel-logout" class="cancel btn btn-danger" style="background-color:#333;">Non</button>
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+
+<section class="event-banner">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+  <div class="event-poster">
+    <img src="{{ url_for('static', filename='uploads/' ~ item.affiche) }}" alt="affiche" />
+  </div>
+  <div class="event-details">
+    <h1>{{ item.titre }}</h1>
+    
+    <div class="event-categories">
+      <span class="category">{{ item.type_event }}</span>
+    </div>
+    <div class="event-info">
+      <p><i class="bi bi-geo-alt-fill"></i> {{ item.lieu }}, MADAGASCAR</p>
+      <p><i class="bi bi-calendar-event-fill"></i> {{ item.date_heure_affiche }}</p>
+      <p><i class="bi bi-person-fill"></i> {{ item.organisateur }}</p>
+    </div>
+    <div class="countdown" data-date="{{ item.date_heure.strftime('%Y-%m-%dT%H:%M:%S') }}">
+      <div class="countdown-item"><span id="days">0</span><span>JOURS</span></div>
+      <div class="countdown-item"><span id="hours">0</span><span>HEURES</span></div>
+      <div class="countdown-item"><span id="minutes">0</span><span>MINUTES</span></div>
+      <div class="countdown-item"><span id="seconds">0</span><span>SECONDES</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="event-description">
+  <h2>{{ item.titre }}</h2>
+  <p>{{ item.description }}</p>
+  <p><strong>Entrée :</strong> {{ item.entree }}</p>
+  <p><strong>Plat de résistance :</strong> {{ item.plat_resistance }}</p>
+  <p><strong>Dessert :</strong> {{ item.dessert }}</p>
+  
+
+</section>
+
+<div class="content-container">
+  <section class="venue-map">
+    <h2>PLAN DE SITE</h2>
+    <div class="map-legend" style="display: flex; gap: 20px; margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#b4ea6d;border:1px solid #ccc;"></span>
+        <span>SIMPLE</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#4574e9;border:1px solid #ccc;"></span>
+        <span>SILVER</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#74d3f6;border:1px solid #ccc;"></span>
+        <span>GOLD</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#eaef6d;border:1px solid #ccc;"></span>
+        <span>VIP</span>
+      </div>
+    </div>
+    <div class="map-container">
+      <div class="seating-chart">
+        <img src="{{ url_for('static', filename='images/places.png') }}" alt="Plan de site">
+      </div>
+    </div>
+
+  </section>
+  <section class="ticket-types">
+    <h2>TYPE DE BILLETS</h2>
+    {% set prix = {
+      'SIMPLE': item.prix_simple,
+      'SILVER': item.prix_silver,
+      'GOLD': item.prix_gold,
+      'VIP': item.prix_vip
+    } %}
+
+    <form action="{{ url_for('details', item_id=item.id) }}" method="POST">
+      <div class="ticket-list">
+        {% for type in ['SIMPLE', 'SILVER', 'GOLD', 'VIP'] %}
+        <div class="ticket-item">
+          <div class="ticket-info">
+            <input type="radio" class="select-btn" name="ticket_type" value="{{ type }}" id="{{ type|lower }}" required data-price="{{ prix[type] }}">
+            <label for="{{ type|lower }}">
+              <h3>{{ type }}</h3>
+              <p>(Sur plan) <i class="bi bi-info-circle-fill info-icon"></i></p>
+              <div class="tooltip">Description du type {{ type }}</div>
+            </label>
+          </div>
+          <div class="ticket-price">{{ prix[type] }} Ariary</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="ticket-place-number">
+        <label for="place_number">
+          <strong style="color:#17a2b8; font-size: 1.1em; letter-spacing: 1px;">Rangé :</strong>
+          <span style="font-weight:normal; color:#888; font-size:0.95em;">(en suivant le code couleur de votre type de billet)</span>
+        </label>
+        <input type="text" name="place_number" id="place_number" placeholder="Numéro de place" required style="border: 2px solid #17a2b8; border-radius: 5px; padding: 6px 10px; margin-top: 5px;">
+      </div>
+
+      <div class="ticket-quantity" style="margin-bottom: 15px;">
+        <label for="quantity" style="font-weight: 600; color: #17a2b8;padding-top: 4%;">Quantité :</label>
+        <input type="number" name="quantity" id="quantity" min="1" value="1" required style="border: 2px solid #17a2b8; border-radius: 5px; padding: 6px 10px; margin-left: 8px; width: 80px;">
+      </div>
+
+      <div class="ticket-total-price" style="margin-bottom: 20px;">
+        <label for="total_price" style="font-weight: 600; color: #17a2b8;">Prix total :</label>
+        <input type="text" name="total_price" id="total_price" readonly style="border: 2px solid #17a2b8; border-radius: 5px; padding: 6px 10px; margin-left: 8px; background: #f8f9fa; width: 120px;">
+      </div>
+
+      <button type="submit" class="reserve-btn">Réserver</button>
+    </form>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const ticketTypeInputs = document.querySelectorAll('input[name="ticket_type"]');
+      const quantityInput = document.getElementById('quantity');
+      const totalPriceInput = document.getElementById('total_price');
+
+      function calculateTotalPrice() {
+        const selectedTicket = document.querySelector('input[name="ticket_type"]:checked');
+        const quantity = parseInt(quantityInput.value, 10) || 0;
+        const ticketPrice = selectedTicket ? parseFloat(selectedTicket.dataset.price) : 0;
+        const totalPrice = ticketPrice * quantity;
+        totalPriceInput.value = totalPrice.toFixed(2);
+      }
+
+      ticketTypeInputs.forEach(input => {
+        input.addEventListener('change', calculateTotalPrice);
+      });
+      quantityInput.addEventListener('input', calculateTotalPrice);
+      calculateTotalPrice();
+    });
+  </script>
+</div>
+
+{% endblock %}
+
+
+{% block foot %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 item">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/accueil">Accueil</a></li>
+                <li><a href="/evenements">Evènements</a></li>
+               
+            </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 item">
+            <h3>A propos</h3>
+            <ul>
+                <li><a href="/apropos">Qui sommes-nous ?</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-3 item social">
+           
+            <p class="copyright">RI'vent(Ruffin Ilaina) © 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
